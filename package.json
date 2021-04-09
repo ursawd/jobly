@@ -14,7 +14,11 @@
       "config.js"
     ]
   },
-  "keywords": ["Springboard","jobly","Bailey"],
+  "keywords": [
+    "Springboard",
+    "jobly",
+    "Bailey"
+  ],
   "author": "PDB",
   "license": "ISC",
   "dependencies": {
