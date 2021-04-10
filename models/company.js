@@ -39,21 +39,53 @@ class Company {
     return company;
   }
 
-  /** Find all companies.
+  /** Find all companies. Allows filter in query string for company name,
+   *  minEmployees, maxEmployees
+   * /companies?name=cdw&minEmployees=2&maxEmployees=11
    *
    * Returns [{ handle, name, description, numEmployees, logoUrl }, ...]
    * */
 
-  static async findAll() {
-    const companiesRes = await db.query(
-      `SELECT handle,
-                  name,
-                  description,
-                  num_employees AS "numEmployees",
-                  logo_url AS "logoUrl"
-           FROM companies
-           ORDER BY name`
-    );
+  static async findAll(req) {
+    //create SQL query string beginning. Will add to string if
+    //filters are present in query string
+    let qSql = `SELECT handle,
+        name,
+        description,
+        num_employees AS "numEmployees",
+        logo_url AS "logoUrl"
+        FROM companies`;
+    //create closing of SQL query string
+    const qEnd = ` ORDER BY name`;
+    //get number of queries
+    const numFilters = Object.keys(req.query).length;
+    //if any queries, add SQL WHERE clause to begin SQL filter statements
+    if (numFilters !== 0) qSql += ` WHERE `;
+    //iterate through filters, get index, key and value of filter
+    for (let [index, [key, value]] of Object.entries(
+      Object.entries(req.query)
+    )) {
+      //if filter name present add to SQL statement
+      // use ILIKE to match any part of compnay name to filter value
+      if (key === "name") qSql += `name ILIKE '%${value}%'`;
+      if (key === "minEmployees") qSql += `num_employees>=${value}`;
+      if (key === "maxEmployees") qSql += `num_employees<=${value}`;
+      //add 'and' to end of WHERE clause if not last filter in query
+      if (index < numFilters - 1) qSql += " and ";
+    }
+    //close SQL query
+    qSql += qEnd;
+    console.log(qSql);
+    const companiesRes = await db.query(qSql);
+    // const companiesRes = await db.query(
+    //   `SELECT handle,
+    //               name,
+    //               description,
+    //               num_employees AS "numEmployees",
+    //               logo_url AS "logoUrl"
+    //        FROM companies
+    //        ORDER BY name`
+    // );
     return companiesRes.rows;
   }
 
