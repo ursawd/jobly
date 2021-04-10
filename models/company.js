@@ -46,7 +46,7 @@ class Company {
    * Returns [{ handle, name, description, numEmployees, logoUrl }, ...]
    * */
 
-  static async findAll(req) {
+  static async findAll(reqquery) {
     //create SQL query string beginning. Will add to string if
     //filters are present in query string
     let qSql = `SELECT handle,
@@ -58,12 +58,12 @@ class Company {
     //create closing of SQL query string
     const qEnd = ` ORDER BY name`;
     //get number of queries
-    const numFilters = Object.keys(req.query).length;
+    const numFilters = Object.keys(reqquery).length;
     //if any queries, add SQL WHERE clause to begin SQL filter statements
     if (numFilters !== 0) qSql += ` WHERE `;
     //iterate through filters, get index, key and value of filter
     for (let [index, [key, value]] of Object.entries(
-      Object.entries(req.query)
+      Object.entries(reqquery)
     )) {
       //if filter name present add to SQL statement
       // use ILIKE to match any part of compnay name to filter value
