@@ -87,6 +87,19 @@ describe("findAll", function () {
       },
     ]);
   });
+  test("works: with filters", async function () {
+    let mockReqQuery = { name: "c", minEmployees: 3 };
+    let companies = await Company.findAll(mockReqQuery);
+    expect(companies).toEqual([
+      {
+        handle: "c3",
+        name: "C3",
+        description: "Desc3",
+        numEmployees: 3,
+        logoUrl: "http://c3.img",
+      },
+    ]);
+  });
 });
 
 /************************************** get */
