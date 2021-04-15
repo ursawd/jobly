@@ -94,6 +94,7 @@ class Job {
    **/
 
   static async get(id) {
+    id = +id;
     const jobRes = await db.query(
       `SELECT id,
                   title,
