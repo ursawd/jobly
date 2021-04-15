@@ -9,15 +9,17 @@ if (process.env.NODE_ENV === "production") {
   db = new Client({
     connectionString: getDatabaseUri(),
     ssl: {
-      rejectUnauthorized: false
-    }
+      rejectUnauthorized: false,
+    },
   });
 } else {
   db = new Client({
-    connectionString: getDatabaseUri()
+    connectionString: getDatabaseUri(),
   });
 }
+console.log("FROM DB.JS", process.env.NODE_ENV);
 
+console.log("FROM DB.JS", getDatabaseUri());
 db.connect();
 
 module.exports = db;
