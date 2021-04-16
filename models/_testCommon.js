@@ -10,21 +10,22 @@ async function commonBeforeAll() {
   await db.query("DELETE FROM users");
   await db.query("DELETE FROM jobs");
   await db.query("DELETE FROM applications");
+  debugger;
+  await db.query(
+    `INSERT INTO jobs('title', 'salary', 'equity','company_handle' )
+    VALUES ('j1', 30000, .1, 'c1'),
+          ('j2', 44444, .2, 'c2'),
+          ('j3', 50000, .3, 'c3')`
+  );
 
   await db.query(`
     INSERT INTO companies(handle, name, num_employees, description, logo_url)
     VALUES ('c1', 'C1', 1, 'Desc1', 'http://c1.img'),
            ('c2', 'C2', 2, 'Desc2', 'http://c2.img'),
            ('c3', 'C3', 3, 'Desc3', 'http://c3.img')`);
-  await db.query(`
-    INSERT INTO jobs(title, salary, equity,company_handle )
-    VALUES ('j1', 30000, .1, 'c1'),
-          ('j2', 40000, .2, 'c2'),
-          ('j3', 50000, .3, 'c3')`);
 
   await db.query(
-    `
-        INSERT INTO users(username,
+    `INSERT INTO users(username,
                           password,
                           first_name,
                           last_name,
