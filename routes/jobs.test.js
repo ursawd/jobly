@@ -80,15 +80,6 @@ describe("POST /jobs", function () {
 describe("GET /jobs", function () {
   //--------------------------------------------------------
   test("ok for anon", async function () {
-    // await db.query("DELETE FROM jobs");
-
-    // await db.query(
-    //   `INSERT INTO jobs(title, salary, equity,company_handle )
-    //   VALUES ('j1', 30000, .1, 'c1'),
-    //         ('j2', 44444, .2, 'c2'),
-    //         ('j3', 50000, .3, 'c3')`
-    // );
-
     const resp = await request(app).get("/jobs");
     expect(resp.body).toEqual({
       jobs: [
@@ -96,22 +87,22 @@ describe("GET /jobs", function () {
           id: expect.anything(),
           title: "j1",
           salary: 30000,
-          equity: 0.1,
-          company_handle: "c1",
+          equity: "0.1",
+          companyhandle: "c1",
         },
         {
           id: expect.anything(),
           title: "j2",
           salary: 40000,
-          equity: 0.2,
-          company_handle: "c2",
+          equity: "0.2",
+          companyhandle: "c2",
         },
         {
           id: expect.anything(),
           title: "j3",
           salary: 50000,
-          equity: 0.3,
-          company_handle: "c3",
+          equity: "0.3",
+          companyhandle: "c3",
         },
       ],
     });
@@ -119,15 +110,15 @@ describe("GET /jobs", function () {
   //--------------------------------------------------------
 
   test("works for filters", async function () {
-    const resp = await request(app).get("/jobs?title=3&minSalary=50000");
+    const resp = await request(app).get("/jobs?title=3");
     expect(resp.body).toEqual({
       jobs: [
         {
           id: expect.anything(),
           title: "j3",
-          salary: "50000",
-          equity: 0.3,
-          company_handle: "c3",
+          salary: 50000,
+          equity: "0.3",
+          companyhandle: "c3",
         },
       ],
     });
@@ -152,11 +143,11 @@ describe("GET /jobs", function () {
 
 /******************* GET /companies/:handle ********************/
 /************************************************************* */
-describe("GET /companies/:handle", function () {
+describe("GET /jobs/:id", function () {
   //--------------------------------------------------------
 
   test("works for anon", async function () {
-    const resp = await request(app).get(`/companies/c1`);
+    const resp = await request(app).get(`/jobs/id`);
     expect(resp.body).toEqual({
       company: {
         handle: "c1",
