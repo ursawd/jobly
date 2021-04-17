@@ -8,10 +8,13 @@ const express = require("express");
 const { BadRequestError, ExpressError } = require("../expressError");
 const { ensureLoggedIn, checkAdmin } = require("../middleware/auth");
 const Company = require("../models/company");
+const Job = require("../models/job");
 
 const companyNewSchema = require("../schemas/companyNew.json");
 const companyUpdateSchema = require("../schemas/companyUpdate.json");
 const companySearchSchema = require("../schemas/companySearch.json");
+const { JsonWebTokenError } = require("jsonwebtoken");
+const db = require("../db");
 
 const router = new express.Router();
 
@@ -82,8 +85,14 @@ router.get("/", async function (req, res, next) {
 
 router.get("/:handle", async function (req, res, next) {
   try {
-    const company = await Company.get(req.params.handle);
-    return res.json({ company });
+    const handle = req.params.handle;
+    const company = await Company.get(handle);
+    const jobs = await db.query(`
+    SELECT * FROM jobs WHERE company_handle = '${handle}'
+    `);
+
+    const data = { company, jobs: jobs.rows };
+    return res.json(data);
   } catch (err) {
     return next(err);
   }
