@@ -147,35 +147,26 @@ describe("GET /jobs/:id", function () {
   //--------------------------------------------------------
 
   test("works for anon", async function () {
-    const resp = await request(app).get(`/jobs/id`);
+    const job = await db.query(`
+    SELECT id FROM jobs WHERE title = 'j3'`);
+    const id = job.rows[0].id;
+    const resp = await request(app).get(`/jobs/${id}`);
     expect(resp.body).toEqual({
-      company: {
-        handle: "c1",
-        name: "C1",
-        description: "Desc1",
-        numEmployees: 1,
-        logoUrl: "http://c1.img",
+      job: {
+        id: id,
+        title: "j3",
+        salary: 50000,
+        equity: "0.3",
+        companyhandle: "c3",
       },
     });
   });
   //--------------------------------------------------------
 
-  test("works for anon: company w/o jobs", async function () {
-    const resp = await request(app).get(`/companies/c2`);
-    expect(resp.body).toEqual({
-      company: {
-        handle: "c2",
-        name: "C2",
-        description: "Desc2",
-        numEmployees: 2,
-        logoUrl: "http://c2.img",
-      },
-    });
-  });
   //--------------------------------------------------------
 
-  test("not found for no such company", async function () {
-    const resp = await request(app).get(`/companies/nope`);
+  test("not found for no such job", async function () {
+    const resp = await request(app).get(`/jobs/99999`);
     expect(resp.statusCode).toEqual(404);
   });
 });

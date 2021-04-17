@@ -1,5 +1,4 @@
 "use strict";
-
 const db = require("../db.js");
 const User = require("../models/user");
 const Job = require("../models/job");
@@ -65,6 +64,7 @@ async function commonBeforeAll() {
     equity: 0.1,
     company_handle: "c1",
   });
+
   await Job.create({
     title: "j2",
     salary: 40000,
@@ -90,7 +90,6 @@ async function commonAfterEach() {
 async function commonAfterAll() {
   await db.end();
 }
-
 const u1Token = createToken({ username: "u1", isAdmin: false });
 const u1TokenAdmin = createToken({ username: "u1", isAdmin: true });
 
