@@ -10,13 +10,6 @@ async function commonBeforeAll() {
   await db.query("DELETE FROM users");
   await db.query("DELETE FROM jobs");
   await db.query("DELETE FROM applications");
-  debugger;
-  await db.query(
-    `INSERT INTO jobs('title', 'salary', 'equity','company_handle' )
-    VALUES ('j1', 30000, .1, 'c1'),
-          ('j2', 44444, .2, 'c2'),
-          ('j3', 50000, .3, 'c3')`
-  );
 
   await db.query(`
     INSERT INTO companies(handle, name, num_employees, description, logo_url)
@@ -38,6 +31,16 @@ async function commonBeforeAll() {
       await bcrypt.hash("password2", BCRYPT_WORK_FACTOR),
     ]
   );
+  try {
+    await db.query(
+      `INSERT INTO jobs(title, salary, equity,company_handle )
+    VALUES ('j1', 30000, .1, 'c1'),
+          ('j2', 40000, .2, 'c2'),
+          ('j3', 50000, .3, 'c3')`
+    );
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 async function commonBeforeEach() {

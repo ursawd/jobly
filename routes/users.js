@@ -14,6 +14,29 @@ const userUpdateSchema = require("../schemas/userUpdate.json");
 
 const router = express.Router();
 //********************************************************************* */
+/** POST /users/:username/jobs/:id  => {applied: jobid}
+ *
+ * Adds a new application. User must be logged in
+ * This returns the the job id applied for
+ * Authorization required: login
+ **/
+
+router.post(
+  "/:username/jobs/:id",
+  ensureLoggedIn,
+  async function (req, res, next) {
+    try {
+      const username = req.params.username;
+      const id = req.params.id;
+      const result = await User.addApp(username, id);
+      const jobid = result.job_id;
+      return res.status(200).json({ applied: jobid });
+    } catch (err) {
+      return next(err);
+    }
+  }
+);
+
 //********************************************************************* */
 /** POST / { user }  => { user, token }
  *
@@ -46,10 +69,8 @@ router.post("/", ensureLoggedIn, checkAdmin, async function (req, res, next) {
 /** GET / => { users: [ {username, firstName, lastName, email }, ... ] }
  *
  * Returns list of all users.
- *
  * Authorization required: login, admin
  **/
-
 router.get("/", ensureLoggedIn, checkAdmin, async function (req, res, next) {
   try {
     const users = await User.findAll();

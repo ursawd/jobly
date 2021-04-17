@@ -18,7 +18,29 @@ beforeAll(commonBeforeAll);
 beforeEach(commonBeforeEach);
 afterEach(commonAfterEach);
 afterAll(commonAfterAll);
-
+//************************************************/
+//
+const getMockId = async function () {
+  //returns id of job in jobs table of db
+  const result = await db.query(
+    `SELECT id 
+  FROM jobs 
+  WHERE title = 'j3'`
+  );
+  return result.rows[0].id;
+};
+//
+/************************************* add application */
+//
+describe("add application to applications table", function () {
+  test("add app successful", async function () {
+    const username = "u1";
+    const job_id = await getMockId();
+    const appliedStatus = await User.addApp({ username, job_id });
+    expect(appliedStatus).toEqual({ username: "u1", job_id: job_id });
+  });
+});
+//
 /************************************** authenticate */
 
 describe("authenticate", function () {
@@ -214,8 +236,7 @@ describe("update", function () {
 describe("remove", function () {
   test("works", async function () {
     await User.remove("u1");
-    const res = await db.query(
-        "SELECT * FROM users WHERE username='u1'");
+    const res = await db.query("SELECT * FROM users WHERE username='u1'");
     expect(res.rows.length).toEqual(0);
   });
 
