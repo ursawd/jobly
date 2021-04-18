@@ -20,6 +20,16 @@ beforeAll(commonBeforeAll);
 beforeEach(commonBeforeEach);
 afterEach(commonAfterEach);
 afterAll(commonAfterAll);
+//==============================================================
+// const getMockId = async function () {
+//   //returns id of job in jobs table of db
+//   const result = await db.query(
+//     `SELECT id
+//   FROM jobs
+//   WHERE title = 'j1'`
+//   );
+//   return result.rows[0].id;
+// };
 
 /******************************* POST /users ********************/
 /************************************************************** */
@@ -136,6 +146,7 @@ describe("GET /users", function () {
           lastName: "U1L",
           email: "user1@user.com",
           isAdmin: false,
+          jobs: [1],
         },
         {
           username: "u2",
@@ -143,6 +154,7 @@ describe("GET /users", function () {
           lastName: "U2L",
           email: "user2@user.com",
           isAdmin: false,
+          jobs: [null],
         },
         {
           username: "u3",
@@ -150,6 +162,7 @@ describe("GET /users", function () {
           lastName: "U3L",
           email: "user3@user.com",
           isAdmin: false,
+          jobs: [null],
         },
       ],
     });
@@ -312,4 +325,16 @@ describe("DELETE /users/:username", function () {
     expect(resp.statusCode).toEqual(404);
   });
 });
-/*********************END TESTS*********************** */
+/************** POST /users/:username/jobs/:id ******************/
+/************************************************************** */
+describe("POST /users/:username/jobs/:id", function () {
+  //----------------------------------------------------
+  test("works for users", async function () {
+    const resp = await request(app)
+      .post(`/users/u1/jobs/2`)
+      .set("authorization", `Bearer ${u1TokenAdmin}`);
+    expect(resp.body).toEqual({ applied: 2 });
+  });
+});
+
+/*********************END TESTS******************************** */
